@@ -63,6 +63,6 @@ echo "Corpus: $CORPUS"
 echo "Top: $TOP"
 echo "==============================="
 
-srun -N $SLURM_JOB_NUM_NODES -n $SLURM_NTASKS "$BIN" \
+srun --mpi=pmi2 -N $SLURM_JOB_NUM_NODES -n $SLURM_NTASKS "$BIN" \
      "$MODE" "$CORPUS" \
      --top "$TOP" --chunk-lines 500 --bar-width 60
