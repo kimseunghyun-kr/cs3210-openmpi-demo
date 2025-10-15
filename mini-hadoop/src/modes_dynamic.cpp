@@ -1,6 +1,5 @@
-extern "C" {
 #include <mpi.h>
-}
+
 #include "count.hpp"
 #include "utils.hpp"
 #include "viz.hpp"
