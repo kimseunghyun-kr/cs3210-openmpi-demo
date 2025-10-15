@@ -41,7 +41,7 @@ if [ ! -f "$PROJECT_DIR/makefile" ]; then
 fi
 
 echo "[INFO] Building MPI binary..."
-srun -N1 -n1 bash -c "cd '$PROJECT_DIR' && make clean && make all"
+srun --mpi=pmi2 -N1 -n1 bash -c "cd '$PROJECT_DIR' && make clean && make all"
 
 # --------------------------------------------------------------------
 # 4. Run the binary
