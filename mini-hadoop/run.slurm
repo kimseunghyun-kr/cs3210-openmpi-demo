@@ -7,7 +7,7 @@
 #SBATCH --ntasks-per-node=8    # ranks per node
 #SBATCH --cpus-per-task=8      # OpenMP threads per rank
 #SBATCH -t 00:15:00
-#SBATCH -p short
+#SBATCH -p i7-13700
 #SBATCH --mem=16G
 
 # --- modules & env ---
