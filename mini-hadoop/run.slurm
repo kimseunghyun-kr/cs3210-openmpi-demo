@@ -18,7 +18,7 @@ cd "$SLURM_SUBMIT_DIR"
 # ------------------------------
 # Default to 1 thread if not explicitly set
 if [ -z "$SLURM_CPUS_PER_TASK" ] || [ "$SLURM_CPUS_PER_TASK" -lt 1 ]; then
-    export OMP_NUM_THREADS=1
+    export OMP_NUM_THREADS=2
 else
     export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 fi
