@@ -5,6 +5,7 @@
 #include <numeric>
 #include <string>
 #include <vector>
+#include <cmath>
 
 inline std::string ascii_bar(double frac, int width) {
     frac = std::max(0.0, std::min(1.0, frac));

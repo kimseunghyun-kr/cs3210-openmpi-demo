@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
+#include <iostream>
 
 using Counter = std::unordered_map<std::string, uint64_t>;
 
