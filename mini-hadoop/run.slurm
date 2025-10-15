@@ -3,7 +3,7 @@
 #SBATCH -o logs_%j.out
 #SBATCH -e logs_%j.err
 #SBATCH -N 2                   # number of physical nodes
-#SBATCH -n 16                  # total number of MPI ranks
+#SBATCH -n 8                  # total number of MPI ranks
 #SBATCH --ntasks-per-node=8    # ranks per node
 #SBATCH --cpus-per-task=8      # OpenMP threads per rank
 #SBATCH -t 00:15:00
