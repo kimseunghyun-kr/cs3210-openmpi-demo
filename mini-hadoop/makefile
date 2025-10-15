@@ -1,16 +1,23 @@
-# mpi_text_hybrid/Makefile
-MPICXX ?= mpicxx
-CXXFLAGS ?= -O3 -std=c++17 -fopenmp -Wall -Wextra -Wno-sign-compare -march=native
-LDFLAGS ?= -fopenmp
+# ============================================
+# MPI + OpenMP Makefile (cross-node safe)
+# ============================================
 
-INCLUDES = -Iinclude
-SRC_DIR := src
+# Always use system OpenMPI compiler wrapper
+MPICXX := mpicxx
+
+# Use portable flags (no -march=native!)
+CXXFLAGS := -O3 -std=c++20 -fopenmp -Wall -Wextra -Wno-sign-compare
+LDFLAGS  := -fopenmp
+INCLUDES := -Iinclude
+
+SRC_DIR   := src
 BUILD_DIR := build
+SRCS      := $(SRC_DIR)/main.cpp $(SRC_DIR)/modes_static.cpp $(SRC_DIR)/modes_dynamic.cpp
+OBJS      := $(SRCS:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
+BIN       := $(BUILD_DIR)/mpi_text_hybrid
 
-SRCS := $(SRC_DIR)/main.cpp $(SRC_DIR)/modes_static.cpp $(SRC_DIR)/modes_dynamic.cpp
-OBJS := $(SRCS:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
-
-BIN := $(BUILD_DIR)/mpi_text_hybrid
+# Default build target
+all: $(BIN)
 
 $(BIN): $(OBJS)
 	@mkdir -p $(BUILD_DIR)
