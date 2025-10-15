@@ -1,9 +1,13 @@
 #include "count.hpp"
 #include "utils.hpp"
 #include "viz.hpp"
-#include <mpi.h>
 #include <chrono>
 #include <iostream>
+
+extern "C" {
+#include <mpi.h>
+}
+
 
 struct Args {
     std::string mode, path;

@@ -1,7 +1,9 @@
+extern "C" {
+#include <mpi.h>
+}
 #include "count.hpp"
 #include "utils.hpp"
 #include "viz.hpp"
-#include <mpi.h>
 #include <omp.h>
 #include <chrono>
 #include <iostream>
