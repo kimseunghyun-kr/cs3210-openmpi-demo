@@ -46,7 +46,10 @@ CORPUS=${2:-./oliver-twist.txt}
 TOP=${3:-30}
 
 echo "[INFO] ====== Running ======"
-mpirun -np $SLURM_NTASKS \
-    --map-by ppr:$((SLURM_NTASKS/SLURM_JOB_NUM_NODES)):node \
-    ./build/mpi_text_hybrid "$MODE" "$CORPUS" \
-    --top "$TOP" --chunk-lines 500 --bar-width 60
+mpirun --mca btl_tcp_if_include eno1 \
+       --mca oob_tcp_if_include eno1 \
+       -np $SLURM_NTASKS \
+       --map-by ppr:$((SLURM_NTASKS/SLURM_JOB_NUM_NODES)):node \
+       ./build/mpi_text_hybrid "$MODE" "$CORPUS" \
+       --top "$TOP" --chunk-lines 500 --bar-width 60
+
