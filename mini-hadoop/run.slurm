@@ -1,68 +1,34 @@
 #!/bin/bash
 #SBATCH -J hybrid_mpi_text
-#SBATCH -o logs_%j.out
-#SBATCH -e logs_%j.err
+#SBATCH -p all
+#SBATCH --constraint="[i7-13700*1&xs-4114*1]"
 #SBATCH -N 2
-#SBATCH -n 8
 #SBATCH --ntasks-per-node=4
 #SBATCH --cpus-per-task=4
-#SBATCH -t 00:15:00
-#SBATCH -p i7-13700
-#SBATCH --mem=16G
+#SBATCH --time=00:15:00
+#SBATCH -o logs/%j.out
+#SBATCH -e logs/%j.err
 
-set -e  # stop on error
-
-# --------------------------------------------------------------------
-# 1. Return to directory where you ran sbatch
-# --------------------------------------------------------------------
+set -e
 cd "$SLURM_SUBMIT_DIR"
-PROJECT_DIR=$(pwd)
 
-# --------------------------------------------------------------------
-# 2. OpenMP configuration
-# --------------------------------------------------------------------
+echo "[INFO] Building MPI + OpenMP binary..."
+make clean && make
+
+echo "[INFO] ====== Runtime Environment ======"
+echo "Nodes: $SLURM_JOB_NUM_NODES"
+echo "MPI ranks: $SLURM_NTASKS"
+echo "OMP threads/rank: $SLURM_CPUS_PER_TASK"
+echo "======================================="
+
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export OMP_PROC_BIND=spread
 export OMP_PLACES=threads
 
-echo "[INFO] ====== Environment ======"
-echo "Working directory: $PROJECT_DIR"
-echo "Nodes: $SLURM_JOB_NUM_NODES"
-echo "MPI ranks: $SLURM_NTASKS"
-echo "OMP threads/rank: $OMP_NUM_THREADS"
-echo "==============================="
-
-# --------------------------------------------------------------------
-# 3. Build the binary from *this* directory
-# --------------------------------------------------------------------
-if [ ! -f "$PROJECT_DIR/makefile" ]; then
-    echo "[ERROR] No makefile found in $PROJECT_DIR"
-    exit 1
-fi
-
-echo "[INFO] Building MPI binary..."
-srun --mpi=pmi2 -N1 -n1 bash -c "cd '$PROJECT_DIR' && make clean && make all"
-
-# --------------------------------------------------------------------
-# 4. Run the binary
-# --------------------------------------------------------------------
 MODE=${1:-dynamic}
-CORPUS=${2:-$PROJECT_DIR/oliver-twist.txt}
+CORPUS=${2:-./oliver-twist.txt}
 TOP=${3:-30}
 
-BIN="$PROJECT_DIR/build/mpi_text_hybrid"
-
-if [ ! -x "$BIN" ]; then
-    echo "[ERROR] Binary not found: $BIN"
-    exit 1
-fi
-
-echo "[INFO] ====== Running Job ======"
-echo "Mode: $MODE"
-echo "Corpus: $CORPUS"
-echo "Top: $TOP"
-echo "==============================="
-
-srun --mpi=pmi2 -N $SLURM_JOB_NUM_NODES -n $SLURM_NTASKS "$BIN" \
-     "$MODE" "$CORPUS" \
+echo "[INFO] Launching job..."
+srun ./build/mpi_text_hybrid "$MODE" "$CORPUS" \
      --top "$TOP" --chunk-lines 500 --bar-width 60

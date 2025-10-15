@@ -1,15 +1,16 @@
 # ============================================
-# MPI + OpenMP Makefile (cross-node safe)
+# MPI + OpenMP Makefile (cross-node safe, SoC cluster)
 # ============================================
 
-# Always use system OpenMPI compiler wrapper
-MPICXX := mpicxx
+# Use the same compiler wrapper as the SoC cluster (PMI/PMIx aware)
+MPICXX := mpic++
 
-# Use portable flags (no -march=native!)
+# Compilation flags
 CXXFLAGS := -O3 -std=c++20 -fopenmp -Wall -Wextra -Wno-sign-compare
 LDFLAGS  := -fopenmp
 INCLUDES := -Iinclude
 
+# Directory layout
 SRC_DIR   := src
 BUILD_DIR := build
 SRCS      := $(SRC_DIR)/main.cpp $(SRC_DIR)/modes_static.cpp $(SRC_DIR)/modes_dynamic.cpp
